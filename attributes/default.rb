@@ -4,7 +4,6 @@ include_attribute "ndb"
 include_attribute "hadoop_spark"
 include_attribute "flink"
 include_attribute "elastic"
-include_attribute "zeppelin"
 include_attribute "glassfish"
 include_attribute "kkafka"
 include_attribute "kzookeeper"
@@ -252,12 +251,6 @@ default['tfserving']['max_route_connections']          = "10"
 #
 default['hopsworks']['pypi_rest_endpoint']             = "https://pypi.org/pypi/{package}/json"
 
-# Livy
-default['hopsworks']['livy_zeppelin_session_timeout']  = "3600"
-
-# Zeppelin
-default['hopsworks']['zeppelin_interpreters']  = "org.apache.zeppelin.hopshive.HopsHiveInterpreter"
-
 
 #
 # Database upgrades
@@ -283,7 +276,21 @@ default["lightdm"]["hidden_shells"] = %w(/bin/false /sbin/nologin)
 default["lightdm"]["keyrings"] = {}
 
 #
-# LDAP
+# KRB
+#
+default['kerberos']['enabled']                       = "false"
+default['kerberos']['kerberos_fqdn']                 = ""
+default['kerberos']['spnego_principal']              = ""
+default['kerberos']['spnego_keytab_file']            = "/etc/security/keytabs/service.keytab"
+default['kerberos']['spnego_server_conf']            = "storeKey=true\nisInitiator=false"
+default['kerberos']['krb_conf_path']                 = "/etc/krb5.conf"
+default['kerberos']['spnego_server_conf']            = ""
+default['kerberos']['krb_server_key_tab_path']       = "/etc/security/keytabs/service.keytab"
+default['kerberos']['krb_server_key_tab_name']       = "service.keytab"
+
+
+#
+# KRB & LDAP
 #
 default['ldap']['enabled']                           = "false"
 default['ldap']['group_mapping']                     = ""
@@ -293,6 +300,7 @@ default['ldap']['user_surname']                      = "sn"
 default['ldap']['user_email']                        = "mail"
 default['ldap']['user_search_filter']                = "uid=%s"
 default['ldap']['group_search_filter']               = "member=%d"
+default['ldap']['krb_search_filter']                 = "krbPrincipalName=%s"
 default['ldap']['attr_binary']                       = "java.naming.ldap.attributes.binary"
 default['ldap']['group_target']                      = "cn"
 default['ldap']['dyn_group_target']                  = "memberOf"

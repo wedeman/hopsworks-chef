@@ -19,7 +19,6 @@ depends 'hops'
 depends 'elastic'
 depends 'hadoop_spark'
 depends 'flink'
-depends 'zeppelin'
 depends 'compat_resource'
 depends 'ulimit2'
 depends 'authbind'
@@ -483,10 +482,6 @@ attribute "livy/keystore",
 attribute "livy/keystore_password",
           :dscription => "ivy.keystore_password",
           :type => "string"
-
-attribute "hopsworks/livy_zeppelin_session_timeout",
-          :description => "Session timeout for Livy on Zeppelin, to differentiate from the default for Jupyter.",
-          :type => 'string'
 
 ##
 ##
@@ -1388,26 +1383,6 @@ attribute "hive2/server2/private_ips",
           :type => "array"
 
 
-##
-##
-## Zeppelin
-##
-##
-
-attribute "zeppelin/user",
-          :description => "User to install/run zeppelin as",
-          :type => 'string'
-
-attribute "zeppelin/group",
-          :description => "Group to install/run zeppelin as",
-          :type => 'string'
-
-attribute "zeppelin/dir",
-          :description => "zeppelin base dir",
-          :type => 'string'
-
-
-
 
 ##
 ##
@@ -2118,6 +2093,10 @@ attribute "ldap/group_search_filter",
           :description => "LDAP group search filter. 'member=%d' (default)",
           :type => 'string'
 
+attribute "ldap/krb_search_filter",
+          :description => "LDAP user krb search filter. 'krbPrincipalName=%s' (default)",
+          :type => 'string'
+
 attribute "ldap/attr_binary",
           :description => "LDAP global Unique Identity Code of the object attribute. 'java.naming.ldap.attributes.binary' (default)",
           :type => 'string'
@@ -2172,6 +2151,42 @@ attribute "ldap/referral",
 
 attribute "ldap/additional_props",
           :description => "LDAP additional properties. '' (default)",
+          :type => 'string'
+
+#
+# Kerberos
+#
+
+attribute "kerberos/enabled",
+          :description => "Enable Kerberos auth. 'false' (default)",
+          :type => 'string'
+
+attribute "kerberos/kerberos_fqdn",
+          :description => "Kerberos fully qualified domain name. '' (default)",
+          :type => 'string'
+
+attribute "kerberos/spnego_principal",
+          :description => "Spnego principal . 'HTTP/server.example.com' (default)",
+          :type => 'string'
+
+attribute "kerberos/spnego_keytab_file",
+          :description => "Spnego principal keytab file path. '/etc/security/keytabs/service.keytab' (default)",
+          :type => 'string'
+          
+attribute "kerberos/krb_conf_path",
+          :description => "Kerberos conf path. '/etc/krb5.conf' (default)",
+          :type => 'string'
+
+attribute "kerberos/spnego_server_conf",
+          :description => "Spnego server extra conf. 'storeKey=true\nisInitiator=false' (default)",
+          :type => 'string' 
+          
+attribute "kerberos/krb_server_key_tab_path",
+          :description => "Spnego server keyTab file location. '/etc/security/keytabs/service.keytab' (default)",
+          :type => 'string'
+
+attribute "kerberos/krb_server_key_tab_name",
+          :description => "Spnego server keyTab file name. 'service.keytab' (default)", 
           :type => 'string'
 
 ### Conda
