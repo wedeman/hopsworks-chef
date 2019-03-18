@@ -2033,8 +2033,6 @@ attribute "mysql/password",
 # SMTP
 #
 #
-
-
 attribute "smtp/host",
           :description => "Ip Address/hostname of SMTP server (default is smtp.gmail.com)",
           :type => 'string'
@@ -2272,12 +2270,12 @@ attribute "hopsworks/jwt/issuer",
           :description => "JWT issuer identifier. (default hopsworks@logicalclocks.com)",
           :type => 'string'
 
-# Fabio remove this before merging
-attribute "install/current_version",
-          :description => "Current installed Hopsworks version",
-          :type => "string"
-
 ### Feature Store
 attribute "hopsworks/featurestore_default_storage_format",
           :description => "Default storage format for the hive database of the feature stores (ORC/PARQUET)",
+          :type => 'string'
+
+# Glassfish Http Configuration
+attribute "glassfish/http/keep_alive_timeout",
+          :description => "Glassfish http listeners Keep alive timeout seconds",
           :type => 'string'
