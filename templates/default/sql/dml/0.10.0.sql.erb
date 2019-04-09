@@ -1,5 +1,3 @@
-REPLACE INTO `hopsworks`.`variables` VALUES ("jupyter_shutdown_timer_interval", "<%= node['jupyter']['shutdown_timer_interval'] %>");
-
 REPLACE INTO `hopsworks`.`variables` VALUES ("kerberos_auth", "<%= node['kerberos']['enabled'] %>");
 REPLACE INTO `hopsworks`.`variables` VALUES ("ldap_krb_search_filter", "<%= node['ldap']['krb_search_filter'] %>");
 REPLACE INTO `hopsworks`.`variables` VALUES ("ldap_krb_dyn_grp_search_filter", "<%= node['ldap']['krb_dyn_grp_search_filter'] %>");
@@ -17,3 +15,10 @@ REPLACE INTO `hopsworks`.`variables` VALUES ("service_jwt_lifetime_ms", "<%= nod
 REPLACE INTO `hopsworks`.`variables` VALUES ("service_jwt_exp_leeway_sec", "<%= node['hopsworks']['jwt']['service_exp_leeway_sec'] %>");
 
 REPLACE INTO `hopsworks`.`variables` VALUES ("keepalive_timeout", "<%= node['glassfish']['http']['keep_alive_timeout']  %>");
+
+REPLACE INTO `hopsworks`.`variables` VALUES ("jupyter_ws_ping_interval", "<%= node['jupyter']['ws_ping_interval'] %>");
+
+REPLACE INTO `hopsworks`.`variables` VALUES ("oauth_enabled", "<%= node['oauth']['enabled'] %>");
+REPLACE INTO `hopsworks`.`variables` VALUES ("oauth_account_status", "<%= node['oauth']['account_status'] %>");
+REPLACE INTO `hopsworks`.`variables` VALUES ("oauth_redirect_uri", "<%= node['oauth']['redirect_uri'] %>");
+REPLACE INTO `hopsworks`.`variables` VALUES ("oauth_group_mapping", "<%= node['oauth']['group_mapping'] %>");

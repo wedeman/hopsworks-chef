@@ -223,8 +223,8 @@ if node['hops']['tls']['enabled'].eql? "true"
 end
 
 condaRepo = 'defaults'
-if node['conda']['mirror_list'].empty? == false
-   repos = node['conda']['mirror_list'].split(/\s*,\s*/)
+if node['conda']['channels']['default_mirrors'].empty? == false
+   repos = node['conda']['channels']['default_mirrors'].split(/\s*,\s*/)
    condaRepo = repos[0]
 end
 
@@ -797,6 +797,14 @@ template "#{domains_dir}/#{domain_name}/bin/tensorboard-launch.sh" do
   action :create
 end
 
+template "#{domains_dir}/#{domain_name}/bin/tensorboard-cleanup.sh" do
+  source "tensorboard-cleanup.sh.erb"
+  owner node['glassfish']['user']
+  group node['conda']['group']
+  mode 0750
+  action :create
+end
+
 template "#{domains_dir}/#{domain_name}/bin/condasearch.sh" do
   source "condasearch.sh.erb"
   owner node['glassfish']['user']
@@ -949,13 +957,6 @@ template "#{domains_dir}/#{domain_name}/bin/letsencrypt.sh" do
   source "letsencrypt.sh.erb"
   owner node['glassfish']['user']
   mode 0770
-  action :create
-end
-
-template "#{domains_dir}/#{domain_name}/bin/convert-ipython-notebook.sh" do
-  source "convert-ipython-notebook.sh.erb"
-  owner node['glassfish']['user']
-  mode 0750
   action :create
 end
 

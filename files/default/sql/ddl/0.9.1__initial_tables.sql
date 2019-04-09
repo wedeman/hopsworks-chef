@@ -583,6 +583,23 @@ CREATE TABLE `jobs_history` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jupyter_interpreter`
+--
+
+DROP TABLE IF EXISTS `jupyter_interpreter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jupyter_interpreter` (
+  `port` int(11) NOT NULL,
+  `name` varchar(255) COLLATE latin1_general_cs NOT NULL,
+  `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_accessed` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`port`,`name`),
+  CONSTRAINT `FK_523_530` FOREIGN KEY (`port`) REFERENCES `jupyter_project` (`port`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=ndbcluster DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jupyter_project`
 --
 
@@ -617,16 +634,34 @@ DROP TABLE IF EXISTS `jupyter_settings`;
 CREATE TABLE `jupyter_settings` (
   `project_id` int(11) NOT NULL,
   `team_member` varchar(150) COLLATE latin1_general_cs NOT NULL,
+  `num_tf_ps` int(11) DEFAULT '1',
+  `num_tf_gpus` int(11) DEFAULT '0',
+  `num_mpi_np` int(11) DEFAULT '1',
+  `appmaster_cores` int(11) DEFAULT '1',
+  `appmaster_memory` int(11) DEFAULT '1024',
+  `num_executors` int(11) DEFAULT '1',
+  `num_executor_cores` int(11) DEFAULT '1',
+  `executor_memory` int(11) DEFAULT '1024',
+  `dynamic_initial_executors` int(11) DEFAULT '1',
+  `dynamic_min_executors` int(11) DEFAULT '1',
+  `dynamic_max_executors` int(11) DEFAULT '1',
   `secret` varchar(255) COLLATE latin1_general_cs NOT NULL,
+  `log_level` varchar(32) COLLATE latin1_general_cs DEFAULT 'INFO',
+  `mode` varchar(32) COLLATE latin1_general_cs NOT NULL,
+  `umask` varchar(32) COLLATE latin1_general_cs DEFAULT '022',
   `advanced` tinyint(1) DEFAULT '0',
+  `archives` varchar(1500) COLLATE latin1_general_cs DEFAULT '',
+  `jars` varchar(1500) COLLATE latin1_general_cs DEFAULT '',
+  `files` varchar(1500) COLLATE latin1_general_cs DEFAULT '',
+  `py_files` varchar(1500) COLLATE latin1_general_cs DEFAULT '',
+  `spark_params` varchar(6500) COLLATE latin1_general_cs DEFAULT '',
   `shutdown_level` int(11) NOT NULL DEFAULT '6',
-  `base_dir` varchar(255) COLLATE latin1_general_cs DEFAULT '/Jupyter/',
-  `json_config` text COLLATE latin1_general_cs NOT NULL,
+  `fault_tolerant` tinyint(1) NOT NULL,
   PRIMARY KEY (`project_id`,`team_member`),
   KEY `team_member` (`team_member`),
   KEY `secret_idx` (`secret`),
-  CONSTRAINT `FK_284_308` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `FK_262_309` FOREIGN KEY (`team_member`) REFERENCES `users` (`email`) ON DELETE CASCADE ON UPDATE NO ACTION
+  CONSTRAINT `FK_262_309` FOREIGN KEY (`team_member`) REFERENCES `users` (`email`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  CONSTRAINT `FK_284_308` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=ndbcluster DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -651,17 +686,14 @@ CREATE TABLE `jwt_signing_key` (
 -- Table structure for table `ldap_user`
 --
 
-DROP TABLE IF EXISTS `remote_user`;
+DROP TABLE IF EXISTS `ldap_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `remote_user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` varchar(45) NOT NULL,
-  `auth_key` varchar(64) NOT NULL,
-  `uuid` varchar(128) NOT NULL,
+CREATE TABLE `ldap_user` (
+  `entry_uuid` varchar(128) COLLATE latin1_general_cs NOT NULL,
+  `auth_key` varchar(64) COLLATE latin1_general_cs NOT NULL,
   `uid` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uuid_UNIQUE` (`uuid`),
+  PRIMARY KEY (`entry_uuid`),
   UNIQUE KEY `uid_UNIQUE` (`uid`),
   CONSTRAINT `FK_257_557` FOREIGN KEY (`uid`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=ndbcluster DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
@@ -1171,6 +1203,22 @@ CREATE TABLE `project_topics` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `projectgenericuser_certs`
+--
+
+DROP TABLE IF EXISTS `projectgenericuser_certs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `projectgenericuser_certs` (
+  `project_generic_username` varchar(120) COLLATE latin1_general_cs NOT NULL,
+  `pgu_key` varbinary(7000) DEFAULT NULL,
+  `pgu_cert` varbinary(3000) DEFAULT NULL,
+  `cert_password` varchar(200) COLLATE latin1_general_cs NOT NULL DEFAULT '',
+  PRIMARY KEY (`project_generic_username`)
+) ENGINE=ndbcluster DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `python_dep`
 --
 
@@ -1422,7 +1470,6 @@ CREATE TABLE `tensorboard` (
   `pid` bigint(20) NOT NULL,
   `last_accessed` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `hdfs_logdir` varchar(10000) COLLATE latin1_general_cs NOT NULL,
-  `secret` varchar(255) COLLATE latin1_general_cs NOT NULL,
   PRIMARY KEY (`project_id`,`user_id`),
   KEY `user_id_fk` (`user_id`),
   KEY `hdfs_user_id_fk` (`hdfs_user_id`),
@@ -1638,6 +1685,24 @@ CREATE TABLE `variables` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `zeppelin_interpreter_confs`
+--
+
+DROP TABLE IF EXISTS `zeppelin_interpreter_confs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `zeppelin_interpreter_confs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL,
+  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `interpreter_conf` text COLLATE latin1_general_cs NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `project_id_UNIQUE` (`project_id`),
+  CONSTRAINT `FK_284_499` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=ndbcluster DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Final view structure for view `hops_users`
 --
 
@@ -1835,48 +1900,3 @@ ALTER TABLE `hopsworks`.`dataset`
   ADD FOREIGN KEY `featurestore_fk` (`feature_store_id`) REFERENCES `feature_store` (`id`)
   ON DELETE SET NULL
   ON UPDATE NO ACTION;
-
-CREATE TABLE IF NOT EXISTS `airflow_material` (
-  `project_id` INT(11) NOT NULL,
-  `user_id`    INT(11) NOT NULL,
-  PRIMARY KEY (`project_id`, `user_id`),
-  FOREIGN KEY `airflow_material_project` (`project_id`) REFERENCES `project` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION,
-  FOREIGN KEY `airflow_material_user` (`user_id`) REFERENCES `users` (`uid`)
-    ON DELETE CASCADE
-    ON UPDATE NO ACTION
-) ENGINE=ndbcluster DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
-
-CREATE TABLE IF NOT EXISTS `oauth_client` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `client_id` varchar(256) NOT NULL,
-  `client_secret` varchar(2048) NOT NULL,
-  `provider_logo_uri` varchar(2048) DEFAULT NULL,
-  `provider_uri` varchar(2048) NOT NULL,
-  `provider_name` varchar(256) NOT NULL,
-  `provider_display_name` varchar(45) NOT NULL,
-  `authorisation_endpoint` varchar(1024) DEFAULT NULL,
-  `token_endpoint` varchar(1024) DEFAULT NULL,
-  `userinfo_endpoint` varchar(1024) DEFAULT NULL,
-  `jwks_uri` varchar(1024) DEFAULT NULL,
-  `provider_metadata_endpoint_supported` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `client_id_UNIQUE` (`client_id`),
-  UNIQUE KEY `provider_name_UNIQUE` (`provider_name`)
-) ENGINE=ndbcluster DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
-
-CREATE TABLE IF NOT EXISTS `oauth_login_state` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `state` varchar(128) NOT NULL,
-  `client_id` varchar(256) NOT NULL,
-  `login_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `token` varchar(2048) DEFAULT NULL,
-  `nonce` varchar(128) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `login_state_UNIQUE` (`state`),
-  FOREIGN KEY `fk_oauth_login_state_client` (`client_id`) REFERENCES `oauth_client` (`client_id`) 
-    ON DELETE CASCADE 
-    ON UPDATE NO ACTION
-) ENGINE=ndbcluster DEFAULT CHARSET=latin1 COLLATE=latin1_general_cs;
-

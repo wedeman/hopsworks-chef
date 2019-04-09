@@ -1,5 +1,3 @@
-ALTER TABLE jupyter_project CHANGE `expires` `last_accessed` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
-
 CREATE TABLE IF NOT EXISTS `jupyter_interpreter` (
   `port` int(11) NOT NULL,
   `name` varchar(255) COLLATE latin1_general_cs NOT NULL,
@@ -31,3 +29,18 @@ ALTER TABLE `jupyter_settings` ADD COLUMN `log_level` varchar(32) COLLATE latin1
 ALTER TABLE `jupyter_settings` ADD COLUMN `umask` varchar(32) COLLATE latin1_general_cs DEFAULT '022';
 ALTER TABLE `jupyter_settings` DROP COLUMN `base_dir`;
 ALTER TABLE `jupyter_settings` DROP COLUMN `json_config`;
+
+DROP TABLE IF EXISTS `airflow_material`;
+
+DROP TABLE IF EXISTS `oauth_client`;
+DROP TABLE IF EXISTS `oauth_login_state`;
+
+ALTER TABLE `remote_user` DROP COLUMN `id`;
+ALTER TABLE `remote_user` DROP COLUMN `type`;
+ALTER TABLE `remote_user` CHANGE COLUMN `uuid` `entry_uuid` varchar(128) NOT NULL;
+ALTER TABLE `remote_user` ADD CONSTRAINT `entry_uuid_pk` PRIMARY KEY (`entry_uuid`);
+
+ALTER TABLE `remote_user` RENAME TO `ldap_user`;
+
+ALTER TABLE `tensorboard` DROP COLUMN `secret`;
+

@@ -1420,7 +1420,11 @@ attribute "jupyter/shutdown_timer_interval",
           :description => "notebook cleaner interval for shutting down expired notebooks",
           :type => 'string'
 
-##
+attribute "jupyter/ws_ping_interval",
+          :description => "Ping frequency for the jupyter websocket",
+          :type => 'string'
+
+#
 ##
 ## Kagent
 ##
@@ -2116,7 +2120,7 @@ attribute "ldap/group_dn",
           :type => 'string'
 
 attribute "ldap/account_status",
-          :description => "Hopsworks account status given for new LDAP user. '4' activated account (default)",
+          :description => "Hopsworks account status given for new LDAP user. '1' verified account (default)",
           :type => 'string'
 #LDAP External JNDI Resource
 attribute "ldap/provider_url",
@@ -2185,6 +2189,20 @@ attribute "kerberos/krb_server_key_tab_path",
 
 attribute "kerberos/krb_server_key_tab_name",
           :description => "Spnego server keyTab file name. 'service.keytab' (default)", 
+          :type => 'string'
+
+# OAuth2
+attribute "oauth/enabled",
+          :description => "Enable OAuth. 'false' (default)",
+          :type => 'string'
+attribute "oauth/redirect_uri",
+          :description => "OAuth redirect uri. 'hopsworks/callback' (default)", 
+          :type => 'string'
+attribute "oauth/account_status",
+          :description => "Hopsworks account status given for new OAuth user. '1' verified account (default)",
+          :type => 'string'
+attribute "oauth/group_mapping",
+          :description => "OAuth group to hopsworks group mappings. Format: (groupA-> HOPS_USER,HOPS_ADMIN;groupB->HOPS_USER)",
           :type => 'string'
 
 ### Conda

@@ -62,7 +62,7 @@ default['hopsworks']['http_logs']['enabled']     = "true"
 default['hopsworks']['env_var_file']             = "#{node['hopsworks']['domains_dir']}/#{node['hopsworks']['domain_name']}_environment_variables"
 
 default['glassfish']['package_url']              = node['download_url'] + "/payara-#{node['glassfish']['version']}.zip"
-default['hopsworks']['cauth_version']            = "otp-auth-0.3.0.jar"
+default['hopsworks']['cauth_version']            = "otp-auth-0.4.0.jar"
 default['hopsworks']['cauth_url']                = "#{node['download_url']}/#{node['hopsworks']['cauth_version']}"
 
 default['hopsworks']['war_url']                  = "#{node['download_url']}/hopsworks/#{node['hopsworks']['version']}/hopsworks-web.war"
@@ -236,6 +236,7 @@ default['jupyter']['user']                             = node['install']['user']
 default['jupyter']['group']                            = node['install']['user'].empty? ? "jupyter" : node['install']['user']
 default['jupyter']['python']                           = "true"
 default['jupyter']['shutdown_timer_interval']          = "30m"
+default['jupyter']['ws_ping_interval']                 = "10s"
 
 #
 # TensorFlow Serving
@@ -306,7 +307,7 @@ default['ldap']['group_target']                      = "cn"
 default['ldap']['dyn_group_target']                  = "memberOf"
 default['ldap']['user_dn']                           = ""
 default['ldap']['group_dn']                          = ""
-default['ldap']['account_status']                    = 4
+default['ldap']['account_status']                    = 1
 
 #LDAP External JNDI Resource
 default['ldap']['provider_url']                      = ""
@@ -317,6 +318,12 @@ default['ldap']['security_principal']                = ""
 default['ldap']['security_credentials']              = ""
 default['ldap']['referral']                          = "follow"
 default['ldap']['additional_props']                  = ""
+
+# OAuth2
+default['oauth']['enabled']                          = "false"
+default['oauth']['redirect_uri']                     = "hopsworks/callback"
+default['oauth']['account_status']                   = 1
+default['oauth']['group_mapping']                    = ""
 
 default['dtrx']['version']                           = "dtrx-7.1.tar.gz"
 default['dtrx']['download_url']                      = "#{node['download_url']}/#{node['dtrx']['version']}"
