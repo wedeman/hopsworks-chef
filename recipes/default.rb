@@ -184,13 +184,18 @@ template timerTablePath do
 end
 
 require 'resolv'
-hostf = Resolv::Hosts.new
-dns = Resolv::DNS.new
-
 hosts = ""
 
 for h in node['kagent']['default']['private_ips']
-  hname = resolve_hostname(h)
+
+  Resolv::DNS.open do |dns|
+    ress = dns.getresources h, Resolv::DNS::Resource::IN::A
+#    p ress.map { |r| r.address }
+#    ress = dns.getresources "ruby-lang.org", Resolv::DNS::Resource::IN::MX
+#    p ress.map { |r| [r.exchange.to_s, r.preference] }
+  end
+  
+  hname = resolve_hostname(h)  
   hosts += "('" + hname.to_s + "','" + h + "')" + ","
 end
 if h.length > 0
