@@ -40,7 +40,7 @@ depends 'hive2'
 depends 'consul'
 depends 'ulimit'
 depends 'glassfish'
-depends 'kube-hops'
+#depends 'kube-hops'
 
 
 recipe  "hopsworks::install", "Installs Glassfish"
